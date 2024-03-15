@@ -5,11 +5,12 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+require('dotenv').config();
 
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
 
-import { Express, Request, Response, ErrorRequestHandler } from 'express';
+import { Express, Request, Response } from 'express';
+import mongoose from 'mongoose';
 
 interface Error {
   status?: number;
@@ -17,8 +18,20 @@ interface Error {
   syscall?: string;
   code?: string;
 }
-const g = 'heyjuj';
 var app: Express = express();
+
+mongoose.set('strictQuery', false);
+const db_url = process.env.MONGODB_URL;
+async function main() {
+  if (!db_url) {
+    return new Error('db url is undefined');
+  } else {
+    await mongoose.connect(db_url);
+  }
+}
+main().catch((err) => {
+  console.log(err);
+});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -31,7 +44,6 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req: Request, res: Response, next: NextFunction) {
