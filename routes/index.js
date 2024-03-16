@@ -5,6 +5,9 @@ const commentController = require('../controllers/commentController');
 
 /* GET home page. */
 router.get('/posts', postController.posts);
+router.get('/post/:id', postController.post);
+router.post('/post', postController.post_add)
+
 
 router.get('/', function (req, res, next) {
   res.render('index', { title: 'Express' });
