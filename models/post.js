@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const { DateTime } = require('luxon');
 
+const User = require('./user')
+
 const Schema = mongoose.Schema;
 
 const PostSchema = new Schema({
@@ -12,7 +14,7 @@ const PostSchema = new Schema({
 });
 
 PostSchema.virtual('timestamp_formatted').get(function () {
-  return DateTime.fromJsDate(this.timestamp).toLocaleString(
+  return DateTime.fromJSDate(this.timestamp).toLocaleString(
     DateTime.DATETIME_MED
   );
 });

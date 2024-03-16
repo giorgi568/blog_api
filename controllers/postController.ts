@@ -10,14 +10,10 @@ exports.posts = async (
   try {
     const posts = await Post.find({})
       .sort({ timestamp: -1 })
-      // .populate('author')
+      .populate('author')
       .exec();
     res.json({ posts: posts });
   } catch (err) {
     return next(err);
   }
-};
-
-exports.simple = function (req: Request, res: Response, next: NextFunction) {
-  res.render('index', { title: 'hell' });
 };
