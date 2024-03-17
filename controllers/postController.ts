@@ -40,20 +40,25 @@ exports.post_add = [
     .trim()
     .escape()
     .isLength({ min: 1 }),
-  body('published', 'published status must be specified').trim().escape(),
+  body('published', 'published status must be specified').trim().escape().isBoolean(),
 
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const post = new Post({
-        title: req.body.title,
-        text: req.body.text,
-        author: req.body.author,
-        published: req.body.published,
-      });
-      await post.save();
-      res
-        .status(200)
-        .json({ success: true, message: 'Post saved successfully' });
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        res.status(400).json({ success: false, message: 'Validation Error' });
+      } else {
+        const post = new Post({
+          title: req.body.title,
+          text: req.body.text,
+          author: req.body.author,
+          published: req.body.published,
+        });
+        await post.save();
+        res
+          .status(200)
+          .json({ success: true, message: 'Post saved successfully' });
+      }
     } catch (err) {
       return next(err);
     }
@@ -67,28 +72,42 @@ exports.post_update = [
     .trim()
     .escape()
     .isLength({ min: 1 }),
-  body('published', 'published status must be specified').trim().escape(),
+  body('published', 'published status must be specified')
+    .trim()
+    .escape()
+    .isBoolean(),
 
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const post = new Post({
-        title: req.body.title,
-        text: req.body.text,
-        author: req.body.author,
-        published: req.body.published,
-        _id: req.params.id,
-      });
-      await Post.findByIdAndUpdate(req.params.id, post, {});
-      res
-        .status(200)
-        .json({ success: true, message: 'Post Updated successfully' });
+      console.log(req.body)
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        res.status(400).json({ success: false, message: 'Validation Error' });
+      } else {
+        const post = new Post({
+          title: req.body.title,
+          text: req.body.text,
+          author: req.body.author,
+          published: req.body.published,
+          _id: req.params.id,
+        });
+        await Post.findByIdAndUpdate(req.params.id, post, {});
+        res
+          .status(200)
+          .json({ success: true, message: 'Post Updated successfully' });
+      }
     } catch (err) {
+      console.log(err);
       return next(err);
     }
   },
 ];
 
-exports.post_delete = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+exports.post_delete = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
   try {
     await Post.findByIdAndDelete(req.params.id);
     res
@@ -97,4 +116,4 @@ exports.post_delete = async (req: Request, res: Response, next: NextFunction): P
   } catch (err) {
     return next(err);
   }
-}
+};
