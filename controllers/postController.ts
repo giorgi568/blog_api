@@ -50,13 +50,51 @@ exports.post_add = [
         author: req.body.author,
         published: req.body.published,
       });
-      console.log(post);
       await post.save();
       res
         .status(200)
-        .json({ success: true, message: 'Post saved successfully'});
+        .json({ success: true, message: 'Post saved successfully' });
     } catch (err) {
       return next(err);
     }
   },
 ];
+
+exports.post_update = [
+  body('title', 'title must not be empty').trim().escape().isLength({ min: 1 }),
+  body('text', 'text must not be empty').trim().escape().isLength({ min: 1 }),
+  body('author', 'author must not be empty')
+    .trim()
+    .escape()
+    .isLength({ min: 1 }),
+  body('published', 'published status must be specified').trim().escape(),
+
+  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const post = new Post({
+        title: req.body.title,
+        text: req.body.text,
+        author: req.body.author,
+        published: req.body.published,
+        _id: req.params.id,
+      });
+      await Post.findByIdAndUpdate(req.params.id, post, {});
+      res
+        .status(200)
+        .json({ success: true, message: 'Post Updated successfully' });
+    } catch (err) {
+      return next(err);
+    }
+  },
+];
+
+exports.post_delete = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    await Post.findByIdAndDelete(req.params.id);
+    res
+      .status(200)
+      .json({ success: true, message: 'Post Deleted successfully' });
+  } catch (err) {
+    return next(err);
+  }
+}
