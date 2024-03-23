@@ -1,7 +1,8 @@
-const mongoose = require('mongoose');
-const { DateTime } = require('luxon');
+// const mongoose = require('mongoose');
+// const { DateTime } = require('luxon');
 
-const Schema = mongoose.Schema;
+// const Schema = mongoose.Schema;
+import { mongoose, DateTime, Schema } from './variables';
 
 const CommentSchema = new Schema({
   text: { type: String, required: true },
@@ -10,7 +11,7 @@ const CommentSchema = new Schema({
   timestamp: { type: Date, required: true, default: new Date() },
 });
 
-CommentSchema.virtual('timestamp_formatted').get(function () {
+CommentSchema.virtual('timestamp_formatted').get(function (this:any) {
   return DateTime.fromJSDate(this.timestamp).toLocaleString(
     DateTime.DATETIME_MED
   );

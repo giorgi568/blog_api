@@ -1,3 +1,5 @@
+import { NextFunction } from 'express';
+
 var express = require('express');
 var router = express.Router();
 const postController = require('../controllers/postController');
@@ -43,7 +45,10 @@ router.delete(
 
 router.post('/login', userController.login);
 
-router.get('/', function (req, res, next) {
+interface Response {
+  render?: any;
+}
+router.get('/', function (req: Request, res: Response, next: NextFunction) {
   res.render('index', { title: 'Express' });
 });
 

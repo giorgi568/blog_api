@@ -1,9 +1,10 @@
-const mongoose = require('mongoose');
-const { DateTime } = require('luxon');
+// const mongoose = require('mongoose');
+// const { DateTime } = require('luxon');
 
-const User = require('./user')
+const User = require('./user');
 
-const Schema = mongoose.Schema;
+// const Schema = mongoose.Schema;
+import { mongoose, DateTime, Schema } from './variables';
 
 const PostSchema = new Schema({
   title: { type: String, required: true },
@@ -13,7 +14,7 @@ const PostSchema = new Schema({
   published: { type: Boolean, required: true },
 });
 
-PostSchema.virtual('timestamp_formatted').get(function () {
+PostSchema.virtual('timestamp_formatted').get(function (this:any) {
   return DateTime.fromJSDate(this.timestamp).toLocaleString(
     DateTime.DATETIME_MED
   );
