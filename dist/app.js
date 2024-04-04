@@ -1,16 +1,4 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 var createError = require('http-errors');
 var express = require('express');
@@ -19,23 +7,22 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 require('dotenv').config();
 var indexRouter = require('./routes/index');
-const mongoose_1 = __importDefault(require("mongoose"));
+require("mongoConfig");
 var app = express();
-mongoose_1.default.set('strictQuery', false);
-const db_url = process.env.MONGODB_URL;
-function main() {
-    return __awaiter(this, void 0, void 0, function* () {
-        if (!db_url) {
-            return new Error('db url is undefined');
-        }
-        else {
-            yield mongoose_1.default.connect(db_url);
-        }
-    });
-}
-main().catch((err) => {
-    console.log(err);
-});
+// moved to mongoconfig file
+// import mongoose from 'mongoose';
+// mongoose.set('strictQuery', false);
+// const db_url = process.env.MONGODB_URL;
+// async function main() {
+//   if (!db_url) {
+//     return new Error('db url is undefined');
+//   } else {
+//     await mongoose.connect(db_url);
+//   }
+// }
+// main().catch((err) => {
+//   console.log(err);
+// });
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -44,6 +31,14 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+//add cors to header so we can fetch from other app
+app.use((req, res, next) => {
+    // Add CORS headers
+    res.setHeader('Access-Control-Allow-Origin', '*'); // Change '*' to specific origins in production
+    // res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
+    // res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    next(); // Call next middleware
+});
 app.use('/', indexRouter);
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

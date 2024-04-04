@@ -31,7 +31,9 @@ exports.posts = (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
 exports.post = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const postId = req.params.id;
-        const post = yield Post.findById(postId).exec();
+        const post = yield Post.findById(postId)
+            .populate('author')
+            .exec();
         if (!post) {
             res.status(400).json({ success: false, message: 'post was not found' });
         }
@@ -44,8 +46,14 @@ exports.post = (req, res, next) => __awaiter(void 0, void 0, void 0, function* (
     }
 });
 exports.post_add = [
-    body('title', 'title must not be empty').trim().escape().isLength({ min: 1, max: 200 }),
-    body('text', 'text must not be empty').trim().escape().isLength({ min: 1, max: 10000 }),
+    body('title', 'title must not be empty')
+        .trim()
+        .escape()
+        .isLength({ min: 1, max: 200 }),
+    body('text', 'text must not be empty')
+        .trim()
+        .escape()
+        .isLength({ min: 1, max: 10000 }),
     body('author', 'author must not be empty')
         .trim()
         .escape()
@@ -79,8 +87,14 @@ exports.post_add = [
     }),
 ];
 exports.post_update = [
-    body('title', 'title must not be empty').trim().escape().isLength({ min: 1, max: 200 }),
-    body('text', 'text must not be empty').trim().escape().isLength({ min: 1, max: 10000 }),
+    body('title', 'title must not be empty')
+        .trim()
+        .escape()
+        .isLength({ min: 1, max: 200 }),
+    body('text', 'text must not be empty')
+        .trim()
+        .escape()
+        .isLength({ min: 1, max: 10000 }),
     body('author', 'author must not be empty')
         .trim()
         .escape()

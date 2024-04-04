@@ -30,7 +30,9 @@ exports.post = async (
 ): Promise<void> => {
   try {
     const postId = req.params.id;
-    const post: object | undefined = await Post.findById(postId).exec();
+    const post: object | undefined = await Post.findById(postId)
+      .populate('author')
+      .exec();
     if (!post) {
       res.status(400).json({ success: false, message: 'post was not found' });
     } else {
@@ -42,8 +44,14 @@ exports.post = async (
 };
 
 exports.post_add = [
-  body('title', 'title must not be empty').trim().escape().isLength({ min: 1, max: 200 }),
-  body('text', 'text must not be empty').trim().escape().isLength({ min: 1, max: 10000 }),
+  body('title', 'title must not be empty')
+    .trim()
+    .escape()
+    .isLength({ min: 1, max: 200 }),
+  body('text', 'text must not be empty')
+    .trim()
+    .escape()
+    .isLength({ min: 1, max: 10000 }),
   body('author', 'author must not be empty')
     .trim()
     .escape()
@@ -77,8 +85,14 @@ exports.post_add = [
 ];
 
 exports.post_update = [
-  body('title', 'title must not be empty').trim().escape().isLength({ min: 1, max: 200 }),
-  body('text', 'text must not be empty').trim().escape().isLength({ min: 1, max: 10000 }),
+  body('title', 'title must not be empty')
+    .trim()
+    .escape()
+    .isLength({ min: 1, max: 200 }),
+  body('text', 'text must not be empty')
+    .trim()
+    .escape()
+    .isLength({ min: 1, max: 10000 }),
   body('author', 'author must not be empty')
     .trim()
     .escape()

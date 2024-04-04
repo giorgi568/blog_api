@@ -10,7 +10,7 @@ require('dotenv').config();
 var indexRouter = require('./routes/index');
 
 import { Express, Request, Response } from 'express';
-import mongoose from 'mongoose';
+import './mongoConfig';
 
 interface Error {
   status?: number;
@@ -19,19 +19,21 @@ interface Error {
   code?: string;
 }
 var app: Express = express();
+// moved to mongoconfig file
+// import mongoose from 'mongoose';
 
-mongoose.set('strictQuery', false);
-const db_url = process.env.MONGODB_URL;
-async function main() {
-  if (!db_url) {
-    return new Error('db url is undefined');
-  } else {
-    await mongoose.connect(db_url);
-  }
-}
-main().catch((err) => {
-  console.log(err);
-});
+// mongoose.set('strictQuery', false);
+// const db_url = process.env.MONGODB_URL;
+// async function main() {
+//   if (!db_url) {
+//     return new Error('db url is undefined');
+//   } else {
+//     await mongoose.connect(db_url);
+//   }
+// }
+// main().catch((err) => {
+//   console.log(err);
+// });
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
