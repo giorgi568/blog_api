@@ -25,10 +25,14 @@
     "passport-jwt": "^4.0.1"
   },
   "devDependencies": {
+    "@babel/core": "^7.24.4",
+    "@babel/preset-env": "^7.24.4",
+    "@babel/preset-typescript": "^7.24.1",
     "@types/express": "^4.17.21",
     "@types/mongodb-memory-server": "^2.3.0",
     "@types/mongoose": "^5.11.97",
     "@types/node": "^20.11.27",
+    "babel-jest": "^29.7.0",
     "jest": "^29.7.0",
     "mongodb-memory-server": "^9.1.8",
     "nodemon": "^3.1.0",
